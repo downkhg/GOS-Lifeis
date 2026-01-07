@@ -4,7 +4,7 @@ public abstract class ManagerBase<T> : MonoBehaviour where T : MonoBehaviour
 {
     private static T _instance;
 
-    public static T instance
+    public static T Instance
     {
         get
         {
