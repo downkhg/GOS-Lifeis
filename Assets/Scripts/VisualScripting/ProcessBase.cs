@@ -11,7 +11,12 @@ namespace _Project.Scripts.VisualScripting
             get => isOn;
             protected set => isOn = value;
         }
-    
+
+        public void Reset()
+        {
+            isOn = false;
+        }
+
         // 컴포넌트가 동작할 기능 함수
         public abstract void Execute();
     
@@ -20,5 +25,14 @@ namespace _Project.Scripts.VisualScripting
         {
             return (processData.isNot) ? !processData.process.IsOn : processData.process.IsOn;
         }
+
+#if UNITY_EDITOR
+        [ContextMenu("강제 실행 (테스트)")]
+        public void ForceExecute()
+        {
+            Debug.Log($"[{gameObject.name}] 강제 실행 명령을 받았습니다.");
+            Execute();
+        }
+#endif
     }
 }
