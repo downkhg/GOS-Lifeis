@@ -15,9 +15,9 @@ namespace _Project.Scripts.VisualScripting
             {
                 IsOn = true;
                 objTarget = other.gameObject;
-#if UNITY_EDITOR
+
                 this.Log($"진입 감지: {other.name}");
-#endif
+
             }
         }
 
@@ -26,9 +26,8 @@ namespace _Project.Scripts.VisualScripting
             if (other.CompareTag(selectedTag))
             {
                 IsOn = true;
-#if UNITY_EDITOR
+
                 this.Log($"이탈 감지: {other.name}");
-#endif
             }
             if (!objTarget && other.gameObject.GetInstanceID() == objTarget.GetInstanceID())
                 objTarget = null;

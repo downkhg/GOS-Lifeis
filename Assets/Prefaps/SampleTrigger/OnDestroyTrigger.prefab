@@ -51,6 +51,7 @@ MonoBehaviour:
   outputData:
   - process: {fileID: 5295482372853072076}
     isNot: 0
+  isLoop: 0
 --- !u!1 &1800051234827798608
 GameObject:
   m_ObjectHideFlags: 0
@@ -198,6 +199,7 @@ MonoBehaviour:
   outputData:
   - process: {fileID: 1227299855717469262}
     isNot: 0
+  isLoop: 0
 --- !u!1 &5059074492176907084
 GameObject:
   m_ObjectHideFlags: 0
@@ -442,7 +444,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 4d1d70ad4fc2e0642badf629f972c652, type: 2}
+  - {fileID: 2100000, guid: 0242d56e24d844549a8ce0e5c100b7f9, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -766,6 +768,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOn: 0
   selectedTag: Player
+  objTarget: {fileID: 0}
 --- !u!65 &2680333837227307539
 BoxCollider:
   m_ObjectHideFlags: 0
