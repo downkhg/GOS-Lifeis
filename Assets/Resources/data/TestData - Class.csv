@@ -1,5 +1,5 @@
-id,Name,HP,Atk,Range,
-int64,string,int32,int32,double,bool
-1,전사,1000,50,1.5,
-2,마법사,400,120,8,
-3,궁수,600,80,12,
+id,Name,HP,Atk,Range
+int64,string,int32,int32,double
+1,전사,1000,50,1.5
+2,마법사,400,120,8
+3,궁수,600,80,12

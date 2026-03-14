@@ -3,87 +3,91 @@ using System.Collections.Generic;
 using UnityEngine;
 using _Project.Scripts.Data;
 
-/// DB의 데이터 엔트리를 복제(Clone)하여 
-/// 오브젝트가 독립적으로 소유할 수 있게 해주는 컴포넌트입니다.
-/// </summary>
 public class EntryCloner : MonoBehaviour
 {
-    private Dictionary<string, object> _clonedData = new Dictionary<string, object>();
+    private Dictionary<string, object> _runtimeStats = new Dictionary<string, object>();
 
-    [Header("Auto Initialization")]
-    [SerializeField] private string targetTable;
-    [SerializeField] private string targetId;
-    [SerializeField] private bool autoInitOnStart = false;
-
-    [Header("Debug Display")]
-    [SerializeField] private bool showWorldGUI = true;
-
-    // 에디터에서 딕셔너리를 확인할 수 있게 열어줌
-    public IReadOnlyDictionary<string, object> ClonedData => _clonedData;
+    [Header("Settings")]
+    public string targetTable = "Character";
+    public string targetId; // Character ID (예: 1, 2)
+    public bool autoInit = true;
 
     private void Start()
     {
-        if (autoInitOnStart) InitFromDB(targetTable, targetId);
+        if (autoInit && !string.IsNullOrEmpty(targetId))
+            InitFromDB(targetTable, targetId);
     }
 
     public void InitFromDB(string tableName, string id)
     {
-        if (GameManager.instance == null || GameManager.instance.DatabaseManager == null) return;
-
+        if (GameManager.instance == null) return;
         var db = GameManager.instance.DatabaseManager;
-        var table = db.GetTable(tableName);
-        if (table == null) return;
-
-        var row = table.GetRow(id);
+        var row = db.GetTable(tableName)?.GetRow(id);
         if (row == null) return;
 
-        _clonedData.Clear();
-        foreach (var key in row.GetColumns())
+        _runtimeStats.Clear();
+
+        foreach (var col in row.GetColumns())
         {
-            _clonedData[key] = row.Get<object>(key);
+            string type = row.GetColumnType(col);
+            object val = row.Get<object>(col);
+
+            if (type == "struct")
+            {
+                var subTable = db.GetTable(col); // "Class" 테이블
+                if (subTable != null)
+                {
+                    string searchVal = val.ToString();
+                    // 1. ID로 먼저 찾아보고, 없으면 'Name' 컬럼에서 찾음
+                    RowEntity subRow = subTable.GetRow(searchVal) ?? subTable.FindRowByColumn("Name", searchVal);
+
+                    if (subRow != null)
+                    {
+                        foreach (var subCol in subRow.GetColumns())
+                            _runtimeStats[subCol] = subRow.Get<object>(subCol);
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"[EntryCloner] '{searchVal}' 데이터를 {col} 테이블의 ID 또는 Name에서 찾을 수 없습니다.");
+                    }
+                }
+            }
+            else
+            {
+                _runtimeStats[col] = val;
+            }
         }
     }
 
-    // --- 최대한 단순화한 월드 좌표 GUI 출력 ---
-    private void OnGUI()
+    public T GetStat<T>(string key)
     {
-        if (!showWorldGUI || _clonedData.Count == 0) return;
-
-        // GameManager를 통해 검증된 카메라 가져오기
-        Camera targetCam = GameManager.instance.MainRenderCamera;
-        if (targetCam == null) return;
-
-        // 1. 월드 좌표를 스크린 좌표로 변환 (캐릭터 머리 위 2m 지점)
-        Vector3 worldPos = transform.position + Vector3.up * 2.0f;
-        Vector3 screenPos = targetCam.WorldToScreenPoint(worldPos);
-
-        // 2. 카메라 뒤에 있는 경우 출력 안 함
-        if (screenPos.z < 0) return;
-
-        // 3. GUI 박스 출력 (Y좌표는 유니티 GUI 특성상 반전 필요)
-        float rectWidth = 150f;
-        float rectHeight = _clonedData.Count * 20f + 5f;
-        Rect rect = new Rect(screenPos.x - (rectWidth / 2), Screen.height - screenPos.y, rectWidth, rectHeight);
-
-        GUI.Box(rect, ""); // 배경 박스
-
-        // 4. 데이터 내용 한 줄씩 출력
-        GUILayout.BeginArea(rect);
-        foreach (var kvp in _clonedData)
-        {
-            // 너무 긴 데이터는 제외하고 주요 수치 위주로 출력
-            GUILayout.Label($"<color=white>{kvp.Key}:</color> <color=yellow>{kvp.Value}</color>",
-                new GUIStyle(GUI.skin.label) { richText = true, fontSize = 11 });
-        }
-        GUILayout.EndArea();
-    }
-
-    public T Get<T>(string key)
-    {
-        if (_clonedData.TryGetValue(key, out object val))
+        if (_runtimeStats.TryGetValue(key, out object val))
             return (T)Convert.ChangeType(val, typeof(T));
         return default;
     }
 
-    public void Set(string key, object val) => _clonedData[key] = val;
+    public void SetStat(string key, object val)
+    {
+        if (_runtimeStats.ContainsKey(key)) _runtimeStats[key] = val;
+    }
+
+    private void OnGUI()
+    {
+        if (_runtimeStats.Count == 0) return;
+        Camera cam = GameManager.instance.MainRenderCamera;
+        if (cam == null) return;
+
+        Vector3 screenPos = cam.WorldToScreenPoint(transform.position + Vector3.up * 2.2f);
+        if (screenPos.z < 0) return;
+
+        Rect rect = new Rect(screenPos.x - 75, Screen.height - screenPos.y, 160, _runtimeStats.Count * 22f);
+        GUI.backgroundColor = new Color(0, 0, 0, 0.8f);
+        GUILayout.BeginArea(rect, GUI.skin.box);
+        foreach (var kvp in _runtimeStats)
+        {
+            GUILayout.Label($"<color=silver>{kvp.Key}:</color> <color=yellow>{kvp.Value}</color>",
+                new GUIStyle(GUI.skin.label) { richText = true, fontSize = 11 });
+        }
+        GUILayout.EndArea();
+    }
 }

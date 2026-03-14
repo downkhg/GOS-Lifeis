@@ -1,23 +1,25 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace _Project.Scripts.Data
 {
     public class TableData
     {
-        // ID(string)를 키로 하여 RowEntity를 저장
         private Dictionary<string, RowEntity> _rows = new Dictionary<string, RowEntity>();
 
         public void AddRow(string id, RowEntity row) => _rows[id] = row;
 
         public RowEntity GetRow(string id)
         {
-            if (!_rows.TryGetValue(id, out var row))
-            {
-                Debug.LogWarning($"[TableData] ID '{id}'를 찾을 수 없습니다.");
-                return null;
-            }
-            return row;
+            if (_rows.TryGetValue(id, out var row)) return row;
+            return null;
+        }
+
+        // [기획자 편의 기능] 이름이나 특정 값으로 행을 검색
+        public RowEntity FindRowByColumn(string columnName, string value)
+        {
+            return _rows.Values.FirstOrDefault(r => r.Get<string>(columnName) == value);
         }
 
         public IEnumerable<RowEntity> AllRows => _rows.Values;
