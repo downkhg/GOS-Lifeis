@@ -1,0 +1,5 @@
+id,Name,Class,Level
+int64,string,ref,int32
+1,아서,전사,1
+2,멀린,마법사,2
+3,엘프,궁수,3

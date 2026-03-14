@@ -1,0 +1,4 @@
+id,TableName,Path,Description
+int64,string,string,string
+1,Class,data/TestData - Class,직업별 기본 스탯 정의 테이블
+2,Character,data/TestData - Character,게임 내 배치되는 캐릭터 정보 테이블
