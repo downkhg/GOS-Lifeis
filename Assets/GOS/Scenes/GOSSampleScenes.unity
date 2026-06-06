@@ -437,47 +437,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   showDebugGUI: 1
---- !u!21 &331587206
-Material:
-  serializedVersion: 8
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: Sprites/Default
-  m_Shader: {fileID: 10753, guid: 0000000000000000f000000000000000, type: 0}
-  m_Parent: {fileID: 0}
-  m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
-  m_InvalidKeywords: []
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_LockedProperties: 
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - _AlphaTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _MainTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Ints: []
-    m_Floats:
-    - PixelSnap: 0
-    - _EnableExternalAlpha: 0
-    m_Colors:
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _Flip: {r: 1, g: 1, b: 1, a: 1}
-    - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
-  m_BuildTextureStacks: []
-  m_AllowLocking: 1
 --- !u!114 &370505921 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8559770738902439285, guid: 889d62f75cb1f6049844f8d620c536f1, type: 3}
@@ -526,7 +485,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 812b53451cdf4eb4395d988a97b8d1e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!21 &748135315
+--- !u!21 &703729578
 Material:
   serializedVersion: 8
   m_ObjectHideFlags: 0
@@ -986,6 +945,47 @@ PrefabInstance:
       addedObject: {fileID: 951553183}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 483e5c3cf25b08d4cb52bd4ad67a0d51, type: 3}
+--- !u!21 &1449201134
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Sprites/Default
+  m_Shader: {fileID: 10753, guid: 0000000000000000f000000000000000, type: 0}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _AlphaTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - PixelSnap: 0
+    - _EnableExternalAlpha: 0
+    m_Colors:
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Flip: {r: 1, g: 1, b: 1, a: 1}
+    - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1
 --- !u!1 &1626831336
 GameObject:
   m_ObjectHideFlags: 0
@@ -1257,6 +1257,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ca6b792a751c6664883d8234e39f2f50, type: 3}
+--- !u!4 &1894540402 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1927431689581056418, guid: 69e33aec22d09fe43a72b30008c08c1d, type: 3}
+  m_PrefabInstance: {fileID: 2071841806}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1971311684
 GameObject:
   m_ObjectHideFlags: 0
@@ -1487,6 +1492,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2222222222222222220, guid: 69e33aec22d09fe43a72b30008c08c1d, type: 3}
+      propertyPath: objTarget
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 2222222222222222220, guid: 69e33aec22d09fe43a72b30008c08c1d, type: 3}
+      propertyPath: muzzleTransform
+      value: 
+      objectReference: {fileID: 1894540402}
     - target: {fileID: 5576194405485909307, guid: 69e33aec22d09fe43a72b30008c08c1d, type: 3}
       propertyPath: m_Name
       value: PlayerBlue

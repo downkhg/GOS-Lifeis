@@ -14,6 +14,11 @@ GameObject:
   - component: {fileID: 5509822556712381061}
   - component: {fileID: 6246830627812005428}
   - component: {fileID: 548624895179687697}
+  - component: {fileID: 7856419274316895810}
+  - component: {fileID: 2222222222222222220}
+  - component: {fileID: 2222222222222222221}
+  - component: {fileID: 2222222222222222222}
+  - component: {fileID: 2222222222222222223}
   m_Layer: 0
   m_Name: PlayerBlue
   m_TagString: Player
@@ -153,3 +158,95 @@ MonoBehaviour:
   moveSpeed: 6
   autoRunSpeed: 8
   rotateSpeed: 10
+--- !u!114 &7856419274316895810
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5576194405485909307}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1cea1fe3371548941b368dd4aa121721, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetTable: Character
+  targetId: 1
+  autoInit: 1
+--- !u!114 &2222222222222222220
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5576194405485909307}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6696d8d63d4c0a54da605b2d76cbfffe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isOn: 0
+  objTarget: {fileID: 0}
+  muzzleTransform: {fileID: 0}
+  maxDistance: 100
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  debugColor: {r: 1, g: 0, b: 0, a: 1}
+--- !u!114 &2222222222222222221
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5576194405485909307}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3778f30320644ca4b5b2c841aadfd86d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isOn: 0
+  inputData:
+    process: {fileID: 2222222222222222220}
+    isNot: 0
+  outputData:
+  - process: {fileID: 2222222222222222222}
+    isNot: 0
+  isLoop: 1
+--- !u!114 &2222222222222222222
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5576194405485909307}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1111111222233334444555566667777, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isOn: 0
+  attackerCloner: {fileID: 7856419274316895810}
+  targetSource: {fileID: 2222222222222222220}
+  statKey: HP
+  valueSourceKey: Atk
+  constantValue: 0
+  isSubtraction: 1
+  destroyOnZeroHP: 1
+--- !u!114 &2222222222222222223
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5576194405485909307}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1111111222233334444555566667777, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isOn: 0
+  triggerKey: 323
+  outputs:
+  - process: {fileID: 2222222222222222220}
+    isNot: 0
