@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
-using _Project.Scripts.VisualScripting;
 
 namespace _Project.Scripts.VisualScripting.Editor
 {
@@ -11,6 +10,9 @@ namespace _Project.Scripts.VisualScripting.Editor
     {
         private Dictionary<string, List<Type>> _categorizedNodes = new Dictionary<string, List<Type>>();
         private Vector2 _scrollPosition;
+
+        // 검색 기능을 위한 변수 추가
+        private string _searchQuery = "";
 
         [MenuItem("Visual Scripting/GameObject/Pallete Window")]
         public static void ShowWindow()
@@ -34,8 +36,6 @@ namespace _Project.Scripts.VisualScripting.Editor
             foreach (Type type in nodeTypes)
             {
                 string[] guids = AssetDatabase.FindAssets($"{type.Name} t:MonoScript");
-
-                // 기본값
                 string categoryName = "ETC (미분류)";
 
                 foreach (string guid in guids)
@@ -44,10 +44,12 @@ namespace _Project.Scripts.VisualScripting.Editor
 
                     if (path.EndsWith($"/{type.Name}.cs"))
                     {
-                        // [핵심 변경점] 하위 폴더 깊이에 상관없이, 경로에 포함된 대분류 키워드만 찾습니다.
-                        if (path.Contains("/Input/")) categoryName = "Input";
-                        else if (path.Contains("/Logic/")) categoryName = "Logic";
-                        else if (path.Contains("/Output/")) categoryName = "Output";
+                        // 폴더 구조를 기반으로 카테고리 파싱 (예: VisualScripting/Output_Camera/.. 이면 Output_Camera)
+                        string[] parts = path.Split('/');
+                        if (parts.Length > 2)
+                        {
+                            categoryName = parts[parts.Length - 2];
+                        }
                         break;
                     }
                 }
@@ -60,35 +62,48 @@ namespace _Project.Scripts.VisualScripting.Editor
             }
         }
 
-        // 카테고리 정렬 순서를 지정하는 헬퍼 함수
-        private int GetCategoryOrder(string category)
-        {
-            if (category == "Input") return 1;
-            if (category == "Logic") return 2;
-            if (category == "Output") return 3;
-            return 4; // ETC 등 나머지는 맨 아래로
-        }
-
         private void OnGUI()
         {
-            GUILayout.Space(10);
-            if (GUILayout.Button("🔄 리스트 새로고침 (Refresh)", GUILayout.Height(30)))
+            GUILayout.Label("Visual Scripting Node Palette", EditorStyles.boldLabel);
+            GUILayout.Space(5);
+
+            // --- 🔍 검색창 UI 추가 ---
+            EditorGUILayout.BeginHorizontal(GUI.skin.box);
+            GUILayout.Label("🔍 검색:", GUILayout.Width(50));
+
+            // 텍스트가 바뀔 때마다 OnGUI가 실시간으로 갱신되며 리스트를 필터링합니다.
+            string prevSearch = _searchQuery;
+            _searchQuery = EditorGUILayout.TextField(_searchQuery);
+
+            // 검색어를 지우는 'X' 버튼
+            if (GUILayout.Button("X", GUILayout.Width(20)))
             {
-                RefreshNodeList();
+                _searchQuery = "";
+                GUI.FocusControl(null); // 검색창 포커스 해제
             }
+            EditorGUILayout.EndHorizontal();
             GUILayout.Space(10);
 
             _scrollPosition = EditorGUILayout.BeginScrollView(_scrollPosition);
 
-            // 알파벳 순서가 아닌, GetCategoryOrder에 정의된 논리적 흐름(Input -> Process -> Output) 순으로 정렬
+            // 카테고리 순서 정렬
             var orderedCategories = _categorizedNodes.OrderBy(k => GetCategoryOrder(k.Key));
 
             foreach (var category in orderedCategories)
             {
+                // 현재 검색어 조건에 맞는 노드들만 필터링
+                var filteredNodes = category.Value
+                    .Where(t => string.IsNullOrEmpty(_searchQuery) || t.Name.IndexOf(_searchQuery, StringComparison.OrdinalIgnoreCase) >= 0)
+                    .OrderBy(t => t.Name)
+                    .ToList();
+
+                // 이 카테고리 안에 검색 조건에 맞는 노드가 하나도 없다면 카테고리 타이틀 자체를 그리지 않음
+                if (filteredNodes.Count == 0) continue;
+
                 EditorGUILayout.LabelField($"📂 {category.Key}", EditorStyles.boldLabel);
                 EditorGUI.indentLevel++;
 
-                foreach (Type nodeType in category.Value.OrderBy(t => t.Name))
+                foreach (Type nodeType in filteredNodes)
                 {
                     if (GUILayout.Button($"➕ {nodeType.Name}", GUILayout.Height(25)))
                     {
@@ -103,12 +118,20 @@ namespace _Project.Scripts.VisualScripting.Editor
             EditorGUILayout.EndScrollView();
         }
 
+        // 기존 카테고리 정렬 순서 보장용 헬퍼 함수 (구조에 맞게 순서 수치 커스텀 가능)
+        private int GetCategoryOrder(string categoryName)
+        {
+            if (categoryName.StartsWith("Input")) return 0;
+            if (categoryName.StartsWith("Logic")) return 1;
+            if (categoryName.StartsWith("Output")) return 2;
+            return 99;
+        }
+
         private void CreateNode(Type nodeType, string category)
         {
             GameObject go = new GameObject(nodeType.Name);
             go.AddComponent(nodeType);
 
-            // Input 그룹에 속해있거나 이름에 Trigger가 있다면 자동으로 설정
             if (nodeType.Name.Contains("Trigger"))
             {
                 BoxCollider col = go.AddComponent<BoxCollider>();
